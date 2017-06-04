@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import {
-  WebView
+  WebView,
+  Text
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-class Browser extends Component {
+class BrowserView extends Component {
   componentDidMount() {
     Actions.refresh({title: this.props.title});
   }
@@ -13,9 +14,11 @@ class Browser extends Component {
     return(
       <WebView
         source={{uri: this.props.url}}>
+        <Text>'hello'
+        </Text>
       </WebView>
     );
   }
 }
 
-export default Browser;
+export default BrowserView;
