@@ -13,14 +13,14 @@ import {
 } from 'react-native';
 import { Router, Scene } from 'react-native-router-flux';
 import ListURLs from './components/listurls';
-import BrowserView from './components/browser_view';
+import ShowPage from './components/show_page';
 
 export default class RNBrowser extends Component {
   render() {
     return( <Router>
       <Scene key='root'>
         <Scene key='list' title='URLs' component={ListURLs} initial={true} />
-        <Scene key='browser' component={BrowserView} />
+        <Scene key='show' component={ShowPage} />
       </Scene>
     </Router>);
   }
