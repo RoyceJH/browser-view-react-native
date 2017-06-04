@@ -5,17 +5,45 @@ import {
   Text,
   StyleSheet
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 const urls = [
-  {key:'www.google.com'},
-  {key:'www.facebook.com'},
-  {key:'www.github.com'},
-  {key:'www.linkedin.com'},
-  {key:'www.react.org'},
-  {key:'www.roycekim.com'},
-  {key:'www.bettergoat.us'},
-  {key:'www.roycekim.com/herobreak'},
-  {key:'www.github.com/roycejh'},
+  {
+    key:'Google',
+    url:'https://www.google.com'
+  },
+  {
+    key:'Facebook',
+    url:'https://www.facebook.com'
+  },
+  {
+    key:'Github',
+    url:'https://www.github.com'
+  },
+  {
+    key:'LinkedIn',
+    url:'https://www.linkedin.com'
+  },
+  {
+    key:'React',
+    url:'https://www.react.org'
+  },
+  {
+    key:'Royce',
+    url:'http://www.roycekim.com'
+  },
+  {
+    key:'BetterGoat',
+    url:'http://www.bettergoat.us'
+  },
+  {
+    key:'HeroBreak',
+    url:'http://www.roycekim.com/herobreak'
+  },
+  {
+    key:'Roycejh',
+    url:'https://www.github.com/roycejh',
+  },
 ];
 
 const header = () => {
@@ -23,8 +51,18 @@ const header = () => {
 };
 
 class ListURLs extends Component {
+  constructor(props) {
+    super(props);
+    this.renderBrowser = this.renderBrowser.bind(this);
+    this._renderItem = this._renderItem.bind(this);
+  }
+
+  renderBrowser(url, title) {
+    return () => {Actions.browser({url, title});};
+  }
+
   _renderItem({item}) {
-    return <TouchableOpacity onPress={} style={styles.row}>
+    return <TouchableOpacity onPress={this.renderBrowser(item.url, item.key)} style={styles.row}>
       <Text>{item.key}</Text>
     </TouchableOpacity>;
   }
