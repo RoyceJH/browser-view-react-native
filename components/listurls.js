@@ -3,7 +3,8 @@ import {
   FlatList,
   TouchableOpacity,
   Text,
-  StyleSheet
+  StyleSheet,
+  View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
@@ -50,6 +51,11 @@ const header = () => {
   return <Text>URLs</Text>;
 };
 
+const renderSeparator = () => {
+  return <View style={styles.separator}>
+  </View>;
+};
+
 class ListURLs extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +64,7 @@ class ListURLs extends Component {
   }
 
   renderBrowser(url, title) {
-    return () => {Actions.browser({url, title});};
+    return () => {Actions.show({url, title});};
   }
 
   _renderItem({item}) {
@@ -72,6 +78,7 @@ class ListURLs extends Component {
       <FlatList
         style={styles.rowContainer}
         data={urls}
+        ItemSeparatorComponent={renderSeparator}
         renderItem={this._renderItem}>
       </FlatList>
     );
@@ -82,13 +89,16 @@ const styles = StyleSheet.create({
   row: {
     height: 40,
     width: '100%',
-    borderWidth: 1,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   rowContainer: {
-    marginTop: 70
+    marginTop: 63,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#CED0CE",
   }
 });
 
