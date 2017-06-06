@@ -4,29 +4,78 @@ import {
   View,
   TouchableOpacity,
   Button,
-  StyleSheet
+  StyleSheet,
+  Text
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { sendImpression } from './util.js';
 
 class ShowPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { startTime: Date.now() };
+    this.state = { hidden: false, data: {
+      duration_viewed: "",
+      profile_id: this.props.profile_id,
+      content_id: this.props.content_id,
+      reco_id: this.props.reco_id,
+      precentage_viewed: 100
+    } };
+    this.hideActions = this.hideActions.bind(this);
+    this.onLoad = this.onLoad.bind(this);
+    this.handleAction = this.handleAction.bind(this);
+  }
+
+  onLoad() {
+    this.setState({startTime: Date.now()});
+  }
+
+  componentWillUnmount() {
+    const viewTime = Date.now() - this.state.startTime;
+    // if(viewTime < x) action('bounce')
+    this.handleAction('view');
+  }
+
+  getTimeViewed() {
+    return Date.now() - this.state.startTime;
+  }
+
+  hideActions() {
+    this.setState({hidden: true});
+  }
+
+  handleAction(type) {
+    return () => {
+      let data = this.state.data;
+      data.duration_viewed = this.getTimeViewed();
+      this.setState({data}, () => {
+        sendImpression(data);
+      });
+    };
+  }
+
+  renderActions() {
+    if(this.state.hidden) {
+      return <Text></Text>;
+    } else {
+      return <View style={styles.actionsContainer}>
+        <TouchableOpacity onPress={this.handleAction('like').bind(this)} style={styles.actionButtons}>
+          <Icon name='thumbs-up' style={styles.actions} title='Like'></Icon>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={this.handleAction('skip').bind(this)} style={styles.actionButtons}>
+          <Icon name='thumbs-down' style={styles.actions} title='Dislike'></Icon>
+        </TouchableOpacity>
+      </View>;
+    }
   }
 
   render() {
-    return(<View style={styles.container}>
-      <BrowserView style={{ marginBottom: 100 }} url={this.props.url} title={this.props.title}/>
-
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity style={styles.actionButtons}>
-          <Button style={styles.actions} title='Like'></Button>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionButtons}>
-          <Button style={styles.actions} title='Dislike'></Button>
-        </TouchableOpacity>
+    return(
+      <View onPress={this.hideActions} style={styles.container}>
+        <BrowserView onLoad={this.onLoad} url={this.props.url} title={this.props.title}/>
+        {this.renderActions()}
       </View>
-    </View>);
+    );
   }
 }
 
@@ -35,6 +84,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 63,
   },
+  navigation: {
+    height: 10,
+    flex: 1,
+    flexDirection: 'row'
+  },
   actionsContainer: {
     position: 'absolute',
     bottom: 0,
@@ -42,15 +96,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    borderTopWidth: 2,
-    borderTopColor:  '#7E8687'
+    borderTopWidth: 1,
+    borderTopColor: '#dddddd'
   },
   actionButtons: {
-    borderWidth: 1,
     width: '50%',
+    height: 40,
   },
   actions: {
-    color: 'black'
+    color: '#1D727E',
+    fontSize: 35,
+    textAlign: 'center',
+    backgroundColor: 'white',
+    height: 34,
   }
 });
 
